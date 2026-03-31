@@ -219,115 +219,6 @@
             50% { opacity: 0.5; }
         }
 
-        /* ==================== SETTINGS MODAL ==================== */
-        .settings-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.75);
-            backdrop-filter: blur(6px);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-        }
-        .settings-overlay.open { display: flex; }
-        .settings-modal {
-            background: var(--bg-secondary);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: var(--border-radius);
-            padding: var(--spacing-2xl);
-            width: min(500px, 92vw);
-            box-shadow: 0 24px 64px rgba(0,0,0,0.5);
-            animation: modalIn 0.3s cubic-bezier(0.4,0,0.2,1);
-        }
-        @keyframes modalIn {
-            from { opacity:0; transform: scale(0.92) translateY(16px); }
-            to   { opacity:1; transform: scale(1) translateY(0); }
-        }
-        .settings-modal h3 {
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--accent-gold);
-            margin-bottom: var(--spacing-xl);
-        }
-        .settings-field { margin-bottom: var(--spacing-lg); }
-        .settings-field label {
-            display: block;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: var(--spacing-sm);
-        }
-        .settings-field input {
-            width: 100%;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.12);
-            border-radius: var(--border-radius-sm);
-            padding: 12px 16px;
-            color: var(--text-primary);
-            font-size: 12px;
-            font-family: var(--font-mono);
-            transition: var(--transition);
-        }
-        .settings-field input:focus {
-            outline: none;
-            border-color: var(--accent-gold);
-            box-shadow: 0 0 0 3px rgba(244,213,141,0.15);
-        }
-        .settings-field .hint {
-            font-size: 11px;
-            color: var(--text-tertiary);
-            margin-top: 6px;
-        }
-        .settings-actions {
-            display: flex;
-            gap: var(--spacing-md);
-            justify-content: flex-end;
-            margin-top: var(--spacing-xl);
-            padding-top: var(--spacing-lg);
-            border-top: 1px solid rgba(255,255,255,0.06);
-        }
-        .btn-cancel {
-            padding: 10px 20px;
-            border-radius: var(--border-radius-sm);
-            border: 1px solid rgba(255,255,255,0.15);
-            background: transparent;
-            color: var(--text-secondary);
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        .btn-cancel:hover { background: rgba(255,255,255,0.05); color: #fff; }
-        .btn-save-settings {
-            padding: 10px 24px;
-            border-radius: var(--border-radius-sm);
-            border: none;
-            background: linear-gradient(135deg, var(--accent-gold), var(--warning));
-            color: #1a1d29;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        .btn-save-settings:hover { filter: brightness(1.1); transform: scale(1.02); }
-        .conn-status {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            margin-top: var(--spacing-md);
-            padding: 8px 12px;
-            border-radius: 6px;
-            background: rgba(255,255,255,0.03);
-            min-height: 36px;
-        }
-        .conn-status.ok    { color: var(--success); }
-        .conn-status.error { color: var(--danger); }
-        .conn-status.idle  { color: var(--text-tertiary); }
-
         .sync-status.syncing {
             background: var(--warning);
             box-shadow: 0 0 10px var(--warning);
@@ -846,35 +737,11 @@
         </div>
         <div class="nav-actions">
             <div class="sync-status" id="sync-status" title="Sincronizzato"></div>
-            <button class="btn-icon" title="Impostazioni" onclick="openSettings()">
+            <button class="btn-icon" title="Impostazioni">
                 <i data-lucide="settings"></i>
             </button>
         </div>
     </nav>
-
-    <!-- ==================== SETTINGS MODAL ==================== -->
-    <div class="settings-overlay" id="settings-overlay" onclick="if(event.target===this) closeSettings()">
-        <div class="settings-modal">
-            <h3>⚙️ Configurazione Cataleya</h3>
-
-            <div class="settings-field">
-                <label>URL Google Apps Script</label>
-                <input type="text" id="settings-script-url"
-                       placeholder="https://script.google.com/macros/s/AKfy.../exec">
-                <div class="hint">Incolla qui l'URL che trovi in Apps Script → Implementa → Gestisci implementazioni</div>
-            </div>
-
-            <div class="conn-status idle" id="conn-status">
-                Nessuna connessione configurata
-            </div>
-
-            <div class="settings-actions">
-                <button class="btn-cancel" onclick="testConnection()">🔍 Testa connessione</button>
-                <button class="btn-cancel" onclick="closeSettings()">Annulla</button>
-                <button class="btn-save-settings" onclick="saveSettings()">💾 Salva</button>
-            </div>
-        </div>
-    </div>
 
     <!-- ==================== DASHBOARD PAGE ==================== -->
     <div id="page-dashboard" class="page active">
@@ -884,7 +751,7 @@
                     Benvenuto, Capitano!
                 </h1>
                 <p class="text-secondary" style="font-size: 16px; margin-bottom: var(--spacing-sm);">
-                    Ore motore: <span class="space-grotesk" style="color: var(--accent-gold); font-weight: 700;">208.5h</span> | Ultima uscita: 08 Gennaio 2026
+                    Ore motore: <span id="dash-ore-inline" class="space-grotesk" style="color: var(--accent-gold); font-weight: 700;">208.5h</span> | Ultima uscita: <span id="dash-ultima-uscita">08 Gennaio 2026</span>
                 </p>
                 <p id="marine-quote" style="font-style: italic; color: var(--accent-aqua); font-size: 15px; margin-top: var(--spacing-lg); max-width: 600px; margin-left: auto; margin-right: auto;">
                     "Quando il vento dalla montagna va al mare, prendi la rete e vai a pescare"
@@ -895,19 +762,19 @@
                 <div class="card" style="text-align: center;">
                     <i data-lucide="gauge" style="width: 48px; height: 48px; color: var(--accent-gold); margin-bottom: var(--spacing-md);"></i>
                     <div class="label" style="font-size: 12px; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: var(--spacing-xs);">Ore Motore</div>
-                    <div class="value space-grotesk" style="font-size: 48px; font-weight: 700; color: var(--accent-gold);">208.5h</div>
+                    <div id="dash-ore-card" class="value space-grotesk" style="font-size: 48px; font-weight: 700; color: var(--accent-gold);">208.5h</div>
                 </div>
 
                 <div class="card" style="text-align: center;">
                     <i data-lucide="wrench" style="width: 48px; height: 48px; color: var(--accent-coral); margin-bottom: var(--spacing-md);"></i>
                     <div class="label" style="font-size: 12px; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: var(--spacing-xs);">Lavori in Corso</div>
-                    <div class="value space-grotesk" style="font-size: 48px; font-weight: 700; color: var(--accent-coral);">12</div>
+                    <div id="dash-lavori-card" class="value space-grotesk" style="font-size: 48px; font-weight: 700; color: var(--accent-coral);">12</div>
                 </div>
 
                 <div class="card" style="text-align: center;">
                     <i data-lucide="anchor" style="width: 48px; height: 48px; color: var(--accent-aqua); margin-bottom: var(--spacing-md);"></i>
                     <div class="label" style="font-size: 12px; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: var(--spacing-xs);">Uscite Totali</div>
-                    <div class="value space-grotesk" style="font-size: 48px; font-weight: 700; color: var(--accent-aqua);">25</div>
+                    <div id="dash-uscite-card" class="value space-grotesk" style="font-size: 48px; font-weight: 700; color: var(--accent-aqua);">25</div>
                 </div>
 
                 <div class="card" style="text-align: center;">
@@ -1330,7 +1197,7 @@
                                     <span class="progress-pct">85%</span>
                                 </div>
                                 <div class="task-actions">
-                                    <button class="btn-primary-sm" onclick="completeTaskAndSave('Controllo Olio')">✓ Completato</button>
+                                    <button class="btn-primary-sm" onclick="completeTask('Controllo Olio')">✓ Completato</button>
                                 </div>
                             </div>
 
@@ -1488,7 +1355,7 @@
                                     <span class="progress-pct">83%</span>
                                 </div>
                                 <div class="task-actions">
-                                    <button class="btn-primary-sm" onclick="completeTaskAndSave('Cambio Olio Motore')">✓ Segna Completato</button>
+                                    <button class="btn-primary-sm" onclick="completeTask('Cambio Olio Motore')">✓ Segna Completato</button>
                                     <button class="btn-icon"><i data-lucide="calendar"></i></button>
                                 </div>
                             </div>
@@ -2136,7 +2003,7 @@
             }
         });
 
-        // ── CONFIGURAZIONE GOOGLE SHEETS ─────────────────────────
+        // ── CONFIGURAZIONE & SINCRONIZZAZIONE GOOGLE SHEETS ─────
         const CONFIG_KEY = 'cataleya_script_url';
 
         function getScriptUrl() {
@@ -2156,25 +2023,19 @@
 
         function saveSettings() {
             const url = document.getElementById('settings-script-url').value.trim();
-            if (!url) {
-                setConnStatus('error', '⚠️ Inserisci un URL valido.');
-                return;
-            }
+            if (!url) { setConnStatus('error', '⚠️ Inserisci un URL valido.'); return; }
             if (!url.startsWith('https://script.google.com')) {
-                setConnStatus('error', '⚠️ L\'URL deve iniziare con https://script.google.com');
-                return;
+                setConnStatus('error', '⚠️ URL non valido.'); return;
             }
             localStorage.setItem(CONFIG_KEY, url);
             setConnStatus('ok', '✅ URL salvato!');
-            setSyncStatus('synced');
-            setTimeout(() => {
-                closeSettings();
-                caricaDatiDaSheets();
-            }, 800);
+            setSyncStatus('syncing');
+            setTimeout(() => { closeSettings(); caricaDatiDaSheets(); }, 800);
         }
 
         function setConnStatus(type, msg) {
             const el = document.getElementById('conn-status');
+            if (!el) return;
             el.className = 'conn-status ' + type;
             el.textContent = msg;
         }
@@ -2184,7 +2045,7 @@
             if (!url) { setConnStatus('error', '⚠️ Prima inserisci un URL.'); return; }
             setConnStatus('idle', '🔄 Connessione in corso...');
             try {
-                const res = await fetch(url + '?action=read', { method: 'GET' });
+                const res = await fetch(url + '?action=read');
                 if (!res.ok) throw new Error('HTTP ' + res.status);
                 const data = await res.json();
                 if (data.status === 'success' || data.ore_motore !== undefined) {
@@ -2197,10 +2058,51 @@
             }
         }
 
-        // ── SINCRONIZZAZIONE DATI ─────────────────────────────────
+        // ── AGGIORNA TUTTI GLI ELEMENTI VISIVI ───────────────────
+        function aggiornaUIConDati(data) {
+            // Ore motore
+            if (data.ore_motore !== undefined) {
+                const ore = parseFloat(data.ore_motore) || 0;
+                engineState.currentHours = ore;
+                const oreStr = ore + 'h';
+                // Aggiorna tutti i punti dove appaiono le ore
+                ['dash-ore-inline','dash-ore-card','current-engine-hours'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.textContent = oreStr;
+                });
+                updateMaintenanceUI();
+            }
+
+            // Uscite totali
+            if (data.diario && data.diario.length > 0) {
+                const el = document.getElementById('dash-uscite-card');
+                if (el) el.textContent = data.diario.length;
+
+                // Ultima uscita
+                const ultima = data.diario[data.diario.length - 1];
+                const elData = document.getElementById('dash-ultima-uscita');
+                if (elData && ultima) {
+                    const dataUscita = ultima['Data'] || ultima['data'] || '';
+                    if (dataUscita) elData.textContent = dataUscita;
+                }
+            }
+
+            // Lavori aperti
+            if (data.lavori) {
+                const aperti = data.lavori.filter(l => 
+                    l['Stato'] !== 'Completata' && l['Stato'] !== 'Completato'
+                ).length;
+                const el = document.getElementById('dash-lavori-card');
+                if (el) el.textContent = aperti;
+            }
+        }
+
+        // ── SYNC STATUS ───────────────────────────────────────────
         function setSyncStatus(state) {
             const el = document.getElementById('sync-status');
             if (!el) return;
+            el.style.background = '';
+            el.style.boxShadow = '';
             if (state === 'syncing') {
                 el.className = 'sync-status syncing';
                 el.title = 'Sincronizzando...';
@@ -2211,55 +2113,30 @@
                 el.title = 'Errore sincronizzazione';
             } else {
                 el.className = 'sync-status';
-                el.style.background = '';
-                el.style.boxShadow = '';
                 el.title = 'Sincronizzato';
             }
         }
 
+        // ── CARICA DATI DA GOOGLE SHEETS ─────────────────────────
         async function caricaDatiDaSheets() {
             const url = getScriptUrl();
             if (!url) return;
-
             setSyncStatus('syncing');
             try {
                 const res = await fetch(url + '?action=read');
                 if (!res.ok) throw new Error('HTTP ' + res.status);
                 const data = await res.json();
-
-                // Aggiorna ore motore
-                if (data.ore_motore !== undefined) {
-                    engineState.currentHours = parseFloat(data.ore_motore) || engineState.currentHours;
-                    document.querySelectorAll('.ore-motore-display').forEach(el => {
-                        el.textContent = engineState.currentHours + 'h';
-                    });
-                }
-
-                // Aggiorna stat cards con dati reali
-                if (data.diario) {
-                    const elUscite = document.querySelector('.stat-uscite');
-                    if (elUscite) elUscite.textContent = data.diario.length;
-                }
-                if (data.lavori) {
-                    const aperti = data.lavori.filter(l => l['Stato'] !== 'Completata').length;
-                    const elLavori = document.querySelector('.stat-lavori');
-                    if (elLavori) elLavori.textContent = aperti;
-                }
-
-                // Aggiorna UI manutenzioni
-                updateMaintenanceUI();
-
+                aggiornaUIConDati(data);
                 setSyncStatus('synced');
             } catch (err) {
-                console.warn('Errore sync Sheets:', err.message);
+                console.warn('Errore sync:', err.message);
                 setSyncStatus('error');
             }
         }
 
-        // ── SALVA MANUTENZIONE COMPLETATA SU SHEETS ──────────────
+        // ── COMPLETA MANUTENZIONE ─────────────────────────────────
         async function completeTaskAndSave(taskName) {
-            if (!confirm(`Confermi di aver completato:\n"${taskName}"?\n\nVerrà registrato a ${engineState.currentHours}h.`)) return;
-
+            if (!confirm('Confermi di aver completato:\n"' + taskName + '"?\n\nVerrà registrato a ' + engineState.currentHours + 'h.')) return;
             const url = getScriptUrl();
             const payload = {
                 action: 'complete_maintenance',
@@ -2269,36 +2146,78 @@
                     data_completamento: new Date().toLocaleDateString('it-IT')
                 }
             };
-
             if (url) {
                 setSyncStatus('syncing');
                 try {
-                    const res = await fetch(url, {
-                        method: 'POST',
-                        body: JSON.stringify(payload)
-                    });
+                    const res = await fetch(url, { method: 'POST', body: JSON.stringify(payload) });
                     const data = await res.json();
                     if (data.status === 'success') {
                         setSyncStatus('synced');
                         alert('✅ ' + data.message);
-                    } else {
-                        throw new Error(data.message);
-                    }
+                    } else throw new Error(data.message);
                 } catch (err) {
                     setSyncStatus('error');
-                    alert('⚠️ Salvato localmente. Errore sync: ' + err.message);
+                    alert('⚠️ Errore sync: ' + err.message);
                 }
             } else {
-                alert(`✅ Manutenzione registrata localmente!\n"${taskName}" completata a ${engineState.currentHours}h.\n\nConfigura Google Sheets (⚙️) per salvare online.`);
+                alert('✅ "' + taskName + '" registrata a ' + engineState.currentHours + 'h.\n\nConfigura Google Sheets (⚙️) per salvare online.');
             }
             updateMaintenanceUI();
         }
 
-        // Avvio sincronizzazione al caricamento
+        // ── SETTINGS MODAL CSS ────────────────────────────────────
+        (function injectSettingsStyles() {
+            const style = document.createElement('style');
+            style.textContent = `
+                .settings-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); backdrop-filter:blur(6px); z-index:2000; align-items:center; justify-content:center; }
+                .settings-overlay.open { display:flex; }
+                .settings-modal { background:#252936; border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:32px; width:min(500px,92vw); box-shadow:0 24px 64px rgba(0,0,0,0.5); animation:modalIn 0.3s ease; }
+                @keyframes modalIn { from{opacity:0;transform:scale(0.92) translateY(16px)} to{opacity:1;transform:scale(1) translateY(0)} }
+                .settings-modal h3 { font-size:22px; font-weight:700; color:#f4d58d; margin-bottom:24px; }
+                .settings-field { margin-bottom:16px; }
+                .settings-field label { display:block; font-size:12px; font-weight:600; color:rgba(255,255,255,0.7); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+                .settings-field input { width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.12); border-radius:8px; padding:12px 16px; color:#fff; font-size:12px; font-family:monospace; transition:0.3s; }
+                .settings-field input:focus { outline:none; border-color:#f4d58d; box-shadow:0 0 0 3px rgba(244,213,141,0.15); }
+                .settings-field .hint { font-size:11px; color:rgba(255,255,255,0.4); margin-top:6px; }
+                .settings-actions { display:flex; gap:12px; justify-content:flex-end; margin-top:24px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.06); }
+                .btn-cancel { padding:10px 20px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:transparent; color:rgba(255,255,255,0.7); font-size:14px; font-weight:500; cursor:pointer; transition:0.3s; }
+                .btn-cancel:hover { background:rgba(255,255,255,0.05); color:#fff; }
+                .btn-save-settings { padding:10px 24px; border-radius:8px; border:none; background:linear-gradient(135deg,#f4d58d,#f39c12); color:#1a1d29; font-size:14px; font-weight:700; cursor:pointer; transition:0.3s; }
+                .btn-save-settings:hover { filter:brightness(1.1); transform:scale(1.02); }
+                .conn-status { display:flex; align-items:center; gap:8px; font-size:12px; margin-top:12px; padding:8px 12px; border-radius:6px; background:rgba(255,255,255,0.03); min-height:36px; }
+                .conn-status.ok { color:#2ecc71; } .conn-status.error { color:#e74c3c; } .conn-status.idle { color:rgba(255,255,255,0.4); }
+            `;
+            document.head.appendChild(style);
+        })();
+
+        // ── INIT ──────────────────────────────────────────────────
         document.addEventListener('DOMContentLoaded', () => {
+            // Aggiungi settings button onclick
+            document.querySelector('.btn-icon[title="Impostazioni"]').addEventListener('click', openSettings);
+            // Carica dati reali
             setTimeout(caricaDatiDaSheets, 500);
+            // Ricarica ogni 5 minuti automaticamente
+            setInterval(caricaDatiDaSheets, 5 * 60 * 1000);
         });
     </script>
+
+    <!-- SETTINGS MODAL -->
+    <div class="settings-overlay" id="settings-overlay" onclick="if(event.target===this) closeSettings()">
+        <div class="settings-modal">
+            <h3>⚙️ Configurazione Cataleya</h3>
+            <div class="settings-field">
+                <label>URL Google Apps Script</label>
+                <input type="text" id="settings-script-url" placeholder="https://script.google.com/macros/s/AKfy.../exec">
+                <div class="hint">Incolla qui l'URL da Apps Script → Implementa → Gestisci implementazioni</div>
+            </div>
+            <div class="conn-status idle" id="conn-status">Nessuna connessione configurata</div>
+            <div class="settings-actions">
+                <button class="btn-cancel" onclick="testConnection()">🔍 Testa connessione</button>
+                <button class="btn-cancel" onclick="closeSettings()">Annulla</button>
+                <button class="btn-save-settings" onclick="saveSettings()">💾 Salva</button>
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>
